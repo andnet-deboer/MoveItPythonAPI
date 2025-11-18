@@ -1,0 +1,14 @@
+On this assignment, we collaborated with Flo, Robert, Ben, Joythi, Greg, Aravind and Kyle
+
+Citation [1] - Robert discovered this method for running async tests
+
+Citation [2] - ChatGPT was used to catch 2 typos, one in package.xml and one in our declaration of motionplanninginterface. Unfortunately, due to an error on Theo's part while cleaning out old chats, these chats were accidentally deleted before they could be downloaded.
+
+Citation [3] - ChatGPT. OpenAI. Used on 11/10/2025. Context: AI provided the knowledge that collision_objects needed to have the scene added, as well as some other conceptual help with attaching the box
+Transcript - https://chatgpt.com/share/691766c4-1d60-8002-9536-1c72d183c6de
+
+Citation [4] - ChatGPT. OpenAI. Used on 11/10/2025. Context: AI provided help with finding the yaml path using os.path.join
+Transcript - https://chatgpt.com/share/69176763-8c84-8002-89e7-33fde29de796
+
+Citation [5] - ChatGPT. OpenAI. Used on 11/12/2025. Context: Assistance with Traceback errors
+Transcript - https://chatgpt.com/share/691767e2-ba00-8002-8906-21d0bbc01257 

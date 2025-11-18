@@ -1,0 +1,344 @@
+pose1:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.0, -0.7853981633974483, 0.0, -2.356194490192345, 0.0, 1.5707963267948966, 0.7853981633974483, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose2:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.0, -0.7853981633974483, 0.0, -2.356194490192345, 0.0, 1.5707963267948966, 0.7853981633974483, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose3:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.0, -0.7853981633974483, 0.0, -2.356194490192345, 0.0, 1.5707963267948966, 0.7853981633974483, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose4:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.0, -0.7853981633974483, 0.0, -2.356194490192345, 0.0, 1.5707963267948966, 0.7853981633974483, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose5:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.0, -0.7853981633974483, 0.0, -2.356194490192345, 0.0, 1.5707963267948966, 0.7853981633974483, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose6:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.0, -0.7853981633974483, 0.0, -2.356194490192345, 0.0, 1.5707963267948966, 0.7853981633974483, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose1:
+  names: []
+  positions: array('d')
+
+pose2:
+  names: []
+  positions: array('d')
+
+pose3:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose4:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose5:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose6:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose7:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose8:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose9:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose10:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose11:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose12:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose13:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose14:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose15:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose16:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose17:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose18:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose19:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose20:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose21:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose22:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose23:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose24:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose25:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose26:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose27:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose28:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose29:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose30:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose31:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose32:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose33:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose34:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose35:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose36:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose37:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose38:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose39:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose40:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose41:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose42:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose43:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose44:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose45:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose46:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose47:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose48:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose49:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose50:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose51:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+
+pose52:
+  names: ['fer_joint1', 'fer_joint2', 'fer_joint3', 'fer_joint4', 'fer_joint5', 'fer_joint6', 'fer_joint7', 'fer_finger_joint1', 'fer_finger_joint2']
+  positions: array('d', [0.008964322269894182, -0.7800752647385245, 0.008985819239169359, -2.3602350221275152, 0.009974937168881296, 1.5728469478667269, 0.778107765319409, 0.0, 0.0])
+  velocities: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+  efforts: array('d', [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+

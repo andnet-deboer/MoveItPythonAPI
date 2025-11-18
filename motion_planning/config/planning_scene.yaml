@@ -1,0 +1,29 @@
+/**:
+# Citation Chat GPT helped resolve errors
+  ros__parameters:
+    objects: 
+      - name: "table"
+        frame_id: "base"
+        object_pose:
+          position: [0.6, 0.0, 0.0]
+          orientation: [0.0, 0.0, 0.0, 1.0]
+        geometry:
+          type: 'box'
+          size: [0.5, 1.0, 0.1] # Get this from measuring the table
+      
+      - name: "obstacle"
+        frame_id: "base"
+        object_pose:
+          position: [0.4, 0.0, 0.2]
+          orientation: [0.0, 0.0, 0.0, 1.0]
+        geometry:
+          type: 'box'
+          size: [0.3, 0.04, 0.3] #Basically a board in between the object and the robot
+      - name: "object"
+        frame_id: "base"
+        object_pose:
+          position: [0.4, -0.2, 0.1]
+          orientation: [0.0, 0.0, 0.0, 1.0]
+        geometry:
+          type: 'box'
+          size: [0.04, 0.015, 0.038]
