@@ -23,6 +23,9 @@ from moveit_msgs.srv import (
 )
 
 from rclpy.action import ActionClient
+from rclpy.action import ActionClient
+from control_msgs.action import GripperCommand
+
 from rclpy.callback_groups import MutuallyExclusiveCallbackGroup
 from rclpy.node import Node
 
@@ -93,6 +96,8 @@ class MotionPlanner:
             '/execute_trajectory',
             callback_group=self.cb,
         )
+
+        self.gripper_client = ActionClient(node, GripperCommand, '/gripper_action')
 
         self.accel_factor = accel_factor
         self.vel_factor = vel_factor
@@ -192,7 +197,19 @@ class MotionPlanner:
         return await self.dealWithGeneratingPlan(
             request, execImmediately, save
         )
+    
+    async def operate_gripper_2(self, position: float, max_effort):
+        goal = GripperCommand.Goal()
 
+        MostClosed = 0.01
+        MostOpen = 0.03
+
+        amount = position * (MostOpen - MostClosed) + MostClosed
+        goal.command.position = amount  
+        goal.command.max_effort = max_effort  # in Newtons
+        
+        future = self.gripper_client.send_goal_async(goal)
+    
     async def operate_gripper(self, fraction: float):
         """Set gripper to a position based on open. 0=closed, 1=open."""
         request = self.createMotionPlanRequest()
