@@ -58,6 +58,14 @@ class Pick(Node):
             self.letgo,
             callback_group=self.callback
         )
+
+        self.create_service(
+            Empty,
+            '/grab',
+            self.grab,
+            callback_group=self.callback,
+        )
+
         self.declare_parameter('scene', '')
         self.scene_file = (
             self.get_parameter('scene').get_parameter_value().string_value
@@ -148,6 +156,17 @@ class Pick(Node):
         self.interface.scene.Detach('object')
 
         return res
+    
+    async def grab(self, request, response):
+        await self.interface.Planner.operate_gripper_2(0.7, 30.0)
+        for i in range(30):
+            rclpy.spin_once(self, timeout_sec=0.1)
+        await self.interface.Planner.operate_gripper_2(0.4, 30.0)
+        for i in range(30):
+            rclpy.spin_once(self, timeout_sec=0.1)
+
+        return response
+
 
     async def pick_object(self, request, response):
         """
