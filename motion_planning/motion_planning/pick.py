@@ -156,16 +156,23 @@ class Pick(Node):
         self.interface.scene.Detach('object')
 
         return res
-    
+ 
     async def grab(self, request, response):
-        await self.interface.Planner.operate_gripper_2(0.7, 30.0)
-        for i in range(30):
-            rclpy.spin_once(self, timeout_sec=0.1)
-        await self.interface.Planner.operate_gripper_2(0.4, 30.0)
-        for i in range(30):
+        # Close gripper to 70% (more open)
+        await self.interface.Planner.operate_gripper_3(0.7, 30.0)
+        for _ in range(40):
             rclpy.spin_once(self, timeout_sec=0.1)
 
+        # await self.interface.Planner.open_gripper()
+        # for _ in range(40):
+        #     rclpy.spin_once(self, timeout_sec=0.1)
+        
+        # Close gripper to 40% (more closed, grasping)
+        await self.interface.Planner.operate_gripper_3(0.4, 30.0)
+        for _ in range(20):
+            rclpy.spin_once(self, timeout_sec=0.1)
         return response
+
 
 
     async def pick_object(self, request, response):
