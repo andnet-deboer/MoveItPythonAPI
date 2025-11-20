@@ -46,6 +46,18 @@ class Pick(Node):
             self.pushtrain,
             callback_group=self.callback,
         )
+        self.create_service(
+            Empty,
+            '/squeeze',
+            self.squeeze,
+            callback_group=self.callback
+        )
+        self.create_service(
+            Empty,
+            '/letgo',
+            self.letgo,
+            callback_group=self.callback
+        )
         self.declare_parameter('scene', '')
         self.scene_file = (
             self.get_parameter('scene').get_parameter_value().string_value
@@ -87,6 +99,15 @@ class Pick(Node):
     def locfrompose(self, pose: Pose):
         """Generate an array of coordinates from a pose."""
         return [pose.position.x, pose.position.y, pose.position.z]
+
+    async def squeeze(self, req, res):
+        await self.interface.Planner.operate_gripper_2(.034, 0)
+
+        return res
+    
+    async def letgo(self, req, res):
+        await self.interface.Planner.open_gripper()
+        return res
 
     async def pickupspot(self, req, res):
         """Send the gripper to the spot from which it will pick up the item."""
