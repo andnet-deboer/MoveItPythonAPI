@@ -47,16 +47,10 @@ class Pick(Node):
             callback_group=self.callback,
         )
         self.create_service(
-            Empty,
-            '/squeeze',
-            self.squeeze,
-            callback_group=self.callback
+            Empty, '/squeeze', self.squeeze, callback_group=self.callback
         )
         self.create_service(
-            Empty,
-            '/letgo',
-            self.letgo,
-            callback_group=self.callback
+            Empty, '/letgo', self.letgo, callback_group=self.callback
         )
         self.declare_parameter('scene', '')
         self.scene_file = (
@@ -101,10 +95,10 @@ class Pick(Node):
         return [pose.position.x, pose.position.y, pose.position.z]
 
     async def squeeze(self, req, res):
-        await self.interface.Planner.operate_gripper_2(.034, 0)
+        await self.interface.Planner.operate_gripper_2(0.034, 0)
 
         return res
-    
+
     async def letgo(self, req, res):
         await self.interface.Planner.open_gripper()
         return res
@@ -117,7 +111,7 @@ class Pick(Node):
             self.pose1.position.z,
         ]
 
-        await self.interface.Planner.planPathToPose(
+        await self.interface.Planner.planPathToPoseLists(
             loc=loc1, orient=self.orientation, execImmediately=True
         )
 
@@ -133,7 +127,7 @@ class Pick(Node):
 
     async def pushtrain(self, req, res):
         """Push the train which has been set down."""
-        await self.interface.Planner.planPathToPose(
+        await self.interface.Planner.planPathToPoseLists(
             loc=self.locfrompose(self.pose5),
             orient=self.orientation,
             execImmediately=True,
@@ -169,7 +163,7 @@ class Pick(Node):
             self.pose1.position.y,
             self.pose1.position.z,
         ]
-        await self.interface.Planner.planPathToPose(
+        await self.interface.Planner.planPathToPoseLists(
             loc=loc1, orient=self.orientation, execImmediately=True
         )
 
@@ -196,7 +190,7 @@ class Pick(Node):
             self.pose3.position.y,
             self.pose3.position.z,
         ]
-        await self.interface.Planner.planPathToPose(
+        await self.interface.Planner.planPathToPoseLists(
             loc=loc2, orient=self.orientation, execImmediately=True
         )
 

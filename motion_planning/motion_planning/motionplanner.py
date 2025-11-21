@@ -1,6 +1,6 @@
 """Deals with functions for planning robot trajectory."""
 
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Pose, PoseStamped, Point
 from geometry_msgs.msg import Quaternion, Vector3
 
 from motion_planning.utilities import Utilities
@@ -198,7 +198,7 @@ class MotionPlanner:
         return await self.dealWithGeneratingPlan(
             request, execImmediately, save
         )
-    
+
     async def operate_gripper_2(self, position: float, max_effort: float):
         goal = Grasp.Goal()
 
@@ -209,15 +209,17 @@ class MotionPlanner:
         MostOpen = 0.035
 
         amount = position * (MostOpen - MostClosed) + MostClosed
-        goal.width = position  
+        goal.width = position
         goal.force = max_effort  # in Newtons
-        goal.speed = .04
-        goal.epsilon.inner = .01
-        goal.epsilon.outer = .01
+        goal.speed = 0.04
+        goal.epsilon.inner = 0.01
+        goal.epsilon.outer = 0.01
 
         self.node.get_logger().info(f'Goal: {goal}')
-        
-        future = self.gripper_client.send_goal_async(goal, feedback_callback=self.gripperFeedbackLogger)
+
+        future = self.gripper_client.send_goal_async(
+            goal, feedback_callback=self.gripperFeedbackLogger
+        )
         future.add_done_callback(self.goal_response_callback)
 
     def goal_response_callback(self, future):
@@ -230,10 +232,10 @@ class MotionPlanner:
 
         self._get_result_future = goal_handle.get_result_async()
         self._get_result_future.add_done_callback(self.get_result_callback)
-    
+
     def gripperFeedbackLogger(self, feedback_msg):
         self.node.get_logger().info(f'Grip Feedback: {feedback_msg.feedback}')
-    
+
     def get_result_callback(self, future):
         result = future.result().result
         self.node.get_logger().info(f'Grip Result: {result}')
@@ -287,8 +289,8 @@ class MotionPlanner:
 
     async def planPathToPose(
         self,
-        loc=None,
-        orient=None,
+        loc: Point = None,
+        orient: Quaternion = None,
         start: JointState = None,
         execImmediately: bool = False,
         save: bool = False,
@@ -315,9 +317,7 @@ class MotionPlanner:
 
         if orient is not None:
             rotconst = OrientationConstraint()
-            rotconst.orientation = Quaternion(
-                x=orient[0], y=orient[1], z=orient[2], w=orient[3]
-            )
+            rotconst.orientation = orient
             rotconst.absolute_x_axis_tolerance = 0.01
             rotconst.absolute_y_axis_tolerance = 0.01
             rotconst.absolute_z_axis_tolerance = 0.01
@@ -338,16 +338,14 @@ class MotionPlanner:
             box = SolidPrimitive()
             box.type = SolidPrimitive.BOX
             box.dimensions = [
-                0.01,
-                0.01,
-                0.01,
-            ]  # 1cm tolerance in each direction
+                0.001,
+                0.001,
+                0.001,
+            ]  # 1mm tolerance in each direction
 
             # Define where this
             box_pose = Pose()
-            box_pose.position.x = float(loc[0])
-            box_pose.position.y = float(loc[1])
-            box_pose.position.z = float(loc[2])
+            box_pose.position = loc
             box_pose.orientation.w = 1.0
 
             locconst.constraint_region.primitives = [box]
@@ -357,8 +355,8 @@ class MotionPlanner:
                 f' Goal in tcp frame {locconst.target_point_offset}'
             )
 
-            goalconst.position_constraints = [locconst]
             locconst.target_point_offset = Vector3(x=0.0, y=0.0, z=0.0)
+            goalconst.position_constraints = [locconst]
 
         request.goal_constraints = [goalconst]
 
@@ -368,6 +366,51 @@ class MotionPlanner:
 
         return await self.dealWithGeneratingPlan(
             request, execImmediately, save
+        )
+
+    async def planPathToPoseLists(
+        self,
+        loc=None,
+        orient=None,
+        start: JointState = None,
+        execImmediately: bool = False,
+        save: bool = False,
+    ):
+        """Wrap PlanPathToPose to take lists."""
+        QOrient = Quaternion(
+            x=float(orient[0]),
+            y=float(orient[1]),
+            z=float(orient[2]),
+            w=float(orient[3]),
+        )
+
+        PLoc = Point(x=float(loc[0]), y=float(loc[1]), z=float(loc[2]))
+
+        return await self.planPathToPose(
+            PLoc, QOrient, start, execImmediately, save
+        )
+
+    async def planPathToPoseMsg(
+        self,
+        pose,
+        start: JointState = None,
+        execImmediately: bool = False,
+        save: bool = False,
+    ):
+        """Wrap PlanPathToPose to take a Pose."""
+        if pose is PoseStamped:
+            pose = pose.pose
+
+        loc = [pose.position.x, pose.position.y, pose.position.z]
+        orient = [
+            pose.orientation.x,
+            pose.orientation.y,
+            pose.orientation.z,
+            pose.orientation.w,
+        ]
+
+        return await self.planPathToPose(
+            loc, orient, start, execImmediately, save
         )
 
     async def dealWithGeneratingPlan(
