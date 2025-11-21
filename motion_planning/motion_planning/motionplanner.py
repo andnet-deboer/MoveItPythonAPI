@@ -26,6 +26,8 @@ from rclpy.action import ActionClient
 from rclpy.action import ActionClient
 from control_msgs.action import GripperCommand
 from franka_msgs.action import Grasp
+from franka_msgs.action import Move
+
 
 from rclpy.callback_groups import MutuallyExclusiveCallbackGroup
 from rclpy.node import Node
@@ -99,6 +101,9 @@ class MotionPlanner:
         )
 
         self.gripper_client = ActionClient(node, Grasp, '/fer_gripper/grasp')
+        self.gripper_client2 = ActionClient(
+            node, GripperCommand, '/fer_gripper/gripper_action'
+        )
 
         self.accel_factor = accel_factor
         self.vel_factor = vel_factor
@@ -209,7 +214,7 @@ class MotionPlanner:
         MostOpen = 0.035
 
         amount = position * (MostOpen - MostClosed) + MostClosed
-        goal.width = position
+        goal.width = amount
         goal.force = max_effort  # in Newtons
         goal.speed = 0.04
         goal.epsilon.inner = 0.01
@@ -218,6 +223,48 @@ class MotionPlanner:
         self.node.get_logger().info(f'Goal: {goal}')
 
         future = self.gripper_client.send_goal_async(
+            goal, feedback_callback=self.gripperFeedbackLogger
+        )
+        future.add_done_callback(self.goal_response_callback)
+
+    async def operate_gripper_3(self, position: float, max_effort: float):
+        goal = GripperCommand.Goal()
+        position = float(position)
+        max_effort = float(max_effort)
+
+        MostClosed = 0.01
+        MostOpen = 0.035
+
+        amount = position * (MostOpen - MostClosed) + MostClosed
+
+        # Set the command message inside the goal
+        goal.command.position = amount
+        goal.command.max_effort = max_effort
+
+        self.node.get_logger().info(f'Goal: {goal}')
+
+        future = self.gripper_client2.send_goal_async(
+            goal, feedback_callback=self.gripperFeedbackLogger
+        )
+        future.add_done_callback(self.goal_response_callback)
+
+    async def operate_gripper_3(self, position: float, max_effort: float):
+        goal = GripperCommand.Goal()
+        position = float(position)
+        max_effort = float(max_effort)
+
+        MostClosed = 0.01
+        MostOpen = 0.035
+
+        amount = position * (MostOpen - MostClosed) + MostClosed
+
+        # Set the command message inside the goal
+        goal.command.position = amount
+        goal.command.max_effort = max_effort
+
+        self.node.get_logger().info(f'Goal: {goal}')
+
+        future = self.gripper_client2.send_goal_async(
             goal, feedback_callback=self.gripperFeedbackLogger
         )
         future.add_done_callback(self.goal_response_callback)
