@@ -114,6 +114,8 @@ class MotionPlanner:
         self.max_corner = Vector3(x=1.0, y=1.0, z=1.0)
         self.min_corner = Vector3(x=-1.0, y=-1.0, z=0.0)
 
+        self.down = Quaternion(x=1.0, y=0.0, z=0.0, w=0.0)
+
     def createMotionPlanRequest(self):
         """Create Motion Plan Request."""
         request = MotionPlanRequest()
@@ -445,16 +447,14 @@ class MotionPlanner:
         save: bool = False,
     ):
         """Wrap PlanPathToPose to take a Pose."""
+        poseUnstamped: Pose = Pose()
         if pose is PoseStamped:
-            pose = pose.pose
+            poseUnstamped = pose.pose
+        elif pose is Pose:
+            poseUnstamped = pose
 
-        loc = [pose.position.x, pose.position.y, pose.position.z]
-        orient = [
-            pose.orientation.x,
-            pose.orientation.y,
-            pose.orientation.z,
-            pose.orientation.w,
-        ]
+        loc = poseUnstamped.position
+        orient = poseUnstamped.orientation
 
         return await self.planPathToPose(
             loc, orient, start, execImmediately, save
