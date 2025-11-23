@@ -60,6 +60,14 @@ class Pick(Node):
             callback_group=self.callback,
         )
 
+        self.create_service(
+            Empty,
+            '/scan',
+            self.scan,
+            callback_group=self.callback,
+        )
+
+
         self.declare_parameter('scene', '')
         self.scene_file = (
             self.get_parameter('scene').get_parameter_value().string_value
@@ -167,7 +175,23 @@ class Pick(Node):
             rclpy.spin_once(self, timeout_sec=0.1)
         return response
 
-
+    async def scan(self, request, response):
+        from geometry_msgs.msg import Point
+        
+        center = Point(x=0.5, y=0.0, z=0.08)
+        
+        trajectory = await self.interface.Planner.planCircularScanPath(
+            center=center,
+            radius=0.05,
+            height=0.2,
+            num_waypoints=36,
+            start_angle=0.0,
+            end_angle=360.0,
+            execImmediately=True,
+            save=False,
+        )
+        
+        return response
 
     async def pick_object(self, request, response):
         """
