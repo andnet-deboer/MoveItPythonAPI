@@ -66,6 +66,12 @@ class Pick(Node):
             self.scan,
             callback_group=self.callback,
         )
+        self.create_service(
+            Empty,
+            '/scan_top',
+            self.scan_top,
+            callback_group=self.callback
+        )
 
 
         self.declare_parameter('scene', '')
@@ -224,7 +230,17 @@ class Pick(Node):
             save=False,
         )
         return response
-
+    async def scan_top(self, request, response):
+        first = Pose()
+        first.position.x = 0.4
+        first.position.y = 0.2
+        first.position.z = 0.35
+        second = Pose()
+        second.position.x = 0.4
+        second.position.y = -0.2
+        second.position.z = 0.35
+        await self.interface.Planner.planCartesianPath([first, second, first], execImmediately=True)
+        return response
     async def pick_object(self, request, response):
         """
         Run sequence to do the following.
