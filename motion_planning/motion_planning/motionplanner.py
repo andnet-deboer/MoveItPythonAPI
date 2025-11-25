@@ -693,38 +693,6 @@ class MotionPlanner:
             orientation=True
         )
     
-    # def _calculateCameraOrientation(self,
-    #     tcp_pos: Point,
-    #     target_pos: Point,
-    # ) -> Quaternion:
-    #     """Calculate orientation pointing camera toward center."""
-        
-        
-    #     # Direction vector
-    #     dx = target_pos.x - tcp_pos.x
-    #     dy = target_pos.y - tcp_pos.y
-    #     dz = target_pos.z - tcp_pos.z
-        
-    #     # Yaw: horizontal direction
-    #     yaw = np.arctan2(dy, dx)
-        
-    #     # Pitch: vertical tilt (negative for looking down)
-    #     horizontal_distance = np.sqrt(dx**2 + dy**2)
-    #     pitch = np.arctan2(-dz, horizontal_distance)
-        
-    #     # Roll: camera rotation (0 or π based on mounting)
-    #     roll = -np.pi  # or np.pi
-
-    #     quat= t3d.euler.euler2quat(roll, pitch, yaw, 'rxyz')
-
-    #     quat= np.array([quat[1], quat[2], quat[3], quat[0]])
-        
-    #     return Quaternion(
-    #         w=float(quat[0]),
-    #         x=float(quat[1]),
-    #         y=float(quat[2]),
-    #         z=float(quat[3])
-    #     )
 
     def _calculateCameraOrientation(
         self,
@@ -768,10 +736,8 @@ class MotionPlanner:
         dy /= distance
         dz /= distance
         
-        # Method 1: Using rotation matrix (more reliable)
         # Create a rotation matrix where Z-axis points toward the target
-        
-        # Z-axis: pointing from camera to target (optical axis)
+        # Z-axis: pointing from camera to target 
         z_axis = np.array([dx, dy, dz])
         
         # Choose an up vector (usually world Z-up)
@@ -811,42 +777,6 @@ class MotionPlanner:
             w=float(quat[0])
         )
 
-    # def _calculateCameraOrientation(
-    #     self,
-    #     tcp_pos: Point,
-    #     target_center: Point,
-    # ) -> Quaternion:
-    #     """
-    #     Calculate orientation pointing camera toward center.
-        
-    #     This function calculates the quaternion orientation needed to point
-    #     the camera at the target center from the current TCP position.
-    #     """
-        
-    #     # Calculate direction vector from TCP to target
-    #     dx = target_center.x - tcp_pos.x
-    #     dy = target_center.y - tcp_pos.y
-    #     dz = target_center.z - tcp_pos.z
-        
-    #     yaw = np.arctan2(dy, dx)
-        
-    #     horizontal_distance = np.sqrt(dx**2 + dy**2)
-    #     pitch = np.arctan2(-dz, horizontal_distance)  
-        
-    #     roll = np.pi 
-        
-    #     # Convert Euler angles to quaternion
-    #     # transforms3d uses 'rxyz' convention (roll-pitch-yaw)
-    #     quat = t3d.euler.euler2quat(roll, pitch, yaw, 'rxyz')
-        
-    #     # t3d.euler.euler2quat returns [w, x, y, z]
-    #     # ROS Quaternion expects x, y, z, w
-    #     return Quaternion(
-    #         x=float(quat[1]),
-    #         y=float(quat[2]),
-    #         z=float(quat[3]),
-    #         w=float(quat[0])
-    #     )
 
     async def executePath(self, path: RobotTrajectory):
         """Execute provided path."""
