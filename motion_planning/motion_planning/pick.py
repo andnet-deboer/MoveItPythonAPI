@@ -178,19 +178,51 @@ class Pick(Node):
     async def scan(self, request, response):
         from geometry_msgs.msg import Point
         
-        center = Point(x=0.5, y=0.0, z=0.08)
+        center = Point(x=0.45, y=0.0, z=0.08)
         
-        trajectory = await self.interface.Planner.planCircularScanPath(
+        await self.interface.Planner.planCircularScanPath(
             center=center,
-            radius=0.05,
-            height=0.2,
+            radius=0.07,
+            height=0.25,
             num_waypoints=36,
-            start_angle=0.0,
-            end_angle=360.0,
+            start_angle=0,
+            end_angle=160,
             execImmediately=True,
             save=False,
         )
         
+        await self.interface.Planner.planCircularScanPath(
+            center=center,
+            radius=0.07,
+            height=0.25,
+            num_waypoints=36,
+            start_angle=160,
+            end_angle=0,
+            execImmediately=True,
+            save=False,
+        )
+
+        await self.interface.Planner.planCircularScanPath(
+            center=center,
+            radius=0.12,
+            height=0.1,
+            num_waypoints=36,
+            start_angle=0,
+            end_angle=120,
+            execImmediately=True,
+            save=False,
+        )
+
+        await self.interface.Planner.planCircularScanPath(
+            center=center,
+            radius=0.12,
+            height=0.1,
+            num_waypoints=36,
+            start_angle=0,
+            end_angle=-120,
+            execImmediately=True,
+            save=False,
+        )
         return response
 
     async def pick_object(self, request, response):

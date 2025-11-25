@@ -448,7 +448,7 @@ class MotionPlanner:
         self,
         pose,
         start: JointState = None,
-        execImmediately: bool = False,
+        execImmediately: bool = True,
         save: bool = False,
     ):
         """Wrap PlanPathToPose to take a Pose or PoseStamped."""
