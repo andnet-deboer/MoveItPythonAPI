@@ -454,15 +454,12 @@ class MotionPlanner:
         """Wrap PlanPathToPose to take a Pose or PoseStamped."""
         poseUnstamped: Pose = Pose()
 
-        # Use isinstance, not identity comparison
+        # Use isinstance
         if isinstance(pose, PoseStamped):
             poseUnstamped = pose.pose
-            # OPTIONAL: if pose.header.frame_id != self.basename:
-            #    transform pose to self.basename here (use TF) before using it.
         elif isinstance(pose, Pose):
             poseUnstamped = pose
         else:
-            # nothing useful passed
             return None
 
         loc = poseUnstamped.position
