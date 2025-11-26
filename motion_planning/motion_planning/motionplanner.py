@@ -371,9 +371,9 @@ class MotionPlanner:
             box = SolidPrimitive()
             box.type = SolidPrimitive.BOX
             box.dimensions = [
-                0.001,
-                0.001,
-                0.001,
+                0.01,
+                0.01,
+                0.01,
             ]  # 1mm tolerance in each direction
 
             # Define where this
@@ -448,7 +448,7 @@ class MotionPlanner:
         self,
         pose,
         start: JointState = None,
-        execImmediately: bool = True,
+        execImmediately: bool = False,
         save: bool = False,
     ):
         """Wrap PlanPathToPose to take a Pose or PoseStamped."""
