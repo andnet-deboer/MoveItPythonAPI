@@ -1,6 +1,6 @@
 """Uses motion planning interface to pick up an object."""
 
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Pose, Point
 
 from motion_planning.motionplanninginterface import MotionPlanningInterface
 
@@ -31,6 +31,9 @@ class Pick(Node):
         # Create empty service for calling the pick sequence
         self.create_service(
             Empty, '/pick', self.pick_object, callback_group=self.callback
+        )
+        self.create_service(
+            Empty, '/test', self.pick_object_test, callback_group=self.callback
         )
 
         self.create_service(
@@ -240,6 +243,29 @@ class Pick(Node):
         second.position.y = -0.2
         second.position.z = 0.35
         await self.interface.Planner.planCartesianPath([first, second, first], execImmediately=True)
+
+    async def pick_object_test(self, request, response):
+        """
+        Run sequence to do the following.
+
+        1. Move to object location and pose
+        2. Open grippers and attach object
+        3. Move to a different location
+        4. Open grippers and detach object
+        """
+        # Load scene from yaml file
+        # self.interface.scene.LoadScene(scene=self.scene_file)
+        # Move robot to above object location
+        # self.interface.Planner.planPathToPose(pose1)
+
+        # Move above object
+        loc1 = Point()
+        loc1.x = 0.6
+        loc1.y = -0.36
+        loc1.z = 0.05
+        await self.interface.Planner.planPathToPose(
+            loc=loc1, execImmediately=True
+        )
         return response
     async def pick_object(self, request, response):
         """
@@ -251,7 +277,7 @@ class Pick(Node):
         4. Open grippers and detach object
         """
         # Load scene from yaml file
-        self.interface.scene.LoadScene(scene=self.scene_file)
+        # self.interface.scene.LoadScene(scene=self.scene_file)
         # Move robot to above object location
         # self.interface.Planner.planPathToPose(pose1)
 

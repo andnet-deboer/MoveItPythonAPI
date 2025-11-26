@@ -14,12 +14,20 @@ Detach: Allows the user to detach an object from the end effector
 
 from geometry_msgs.msg import PoseStamped
 
-from moveit_msgs.msg import AttachedCollisionObject, CollisionObject
+from moveit_msgs.msg import (
+    AttachedCollisionObject,
+    CollisionObject,
+    PlanningSceneComponents
+    )
 from moveit_msgs.msg import PlanningScene as ps
+from moveit_msgs.srv import GetPlanningScene
 
 from rclpy.node import Node
+from rclpy.callback_groups import MutuallyExclusiveCallbackGroup
 
 from shape_msgs.msg import SolidPrimitive
+
+from std_srvs.srv import Trigger
 
 import yaml
 
@@ -36,6 +44,49 @@ class PlanningScene:
             ps, '/planning_scene', 10
         )
         self.node.declare_parameter('objects', [])
+        self.group = MutuallyExclusiveCallbackGroup()
+
+        # Create clients
+        # Client to get the full planning scene
+        # Citation Chat GPT
+        self.scene_client = self.node.create_client(
+            GetPlanningScene,
+            '/get_planning_scene',
+            callback_group=self.group
+            )
+        self.scene_client.wait_for_service()
+        # Create a new request object
+        self.scene_req = GetPlanningScene.Request()
+
+        # Create services
+        self.node.create_service(
+            Trigger,
+            '/clean_scene',
+            self.cleanup_scene
+        )
+        # End Citation
+        
+        self.collision_object_list = []  # Create list of objects added to the scene
+
+    async def cleanup_scene(self, request, response):
+        '''Creates a list of planning scene objects from MoveIt.'''
+        self.node.get_logger().info('Scrubbing the scene...')
+
+        self.scene_req.components.components = PlanningSceneComponents.WORLD_OBJECT_GEOMETRY
+        future = self.scene_client.call_async(self.scene_req)
+        response_objects = await future
+
+        objects = response_objects.scene.world.collision_objects
+        self.collision_object_list.append(objects)
+        # Removes all collision objects in the collision objects list
+        self.node.get_logger().info(f"objects: {self.collision_object_list}")
+
+        for obj in objects:
+            self.RemoveBox(obj.id)
+            self.node.get_logger().info(f"Removing object {obj}")
+        response.success = True
+
+        return response
 
     def AddBox(self, X, Y, Z, L, W, H, boxId):
         """Add a box to the planning scene."""
@@ -68,12 +119,13 @@ class PlanningScene:
 
         self.node.scene_object_publisher.publish(self.scene)
         self.node.get_logger().info(f'Box {boxId} placed at {X}, {Y}, {Z}')
+        # self.object_list.append(boxId)
         # END CITATION #
 
     def RemoveBox(self, boxId):
         """Remove a specific box from the planning scene."""
         collision_box = CollisionObject()
-        collision_box.id = f'box_{boxId}'
+        collision_box.id = boxId
         collision_box.operation = CollisionObject.REMOVE
 
         self.scene = ps()
@@ -140,3 +192,4 @@ class PlanningScene:
                     dic['geometry']['size'][2],
                     dic['name'],
                 )
+                # self.object_list.append(dic['name'])
