@@ -1,6 +1,6 @@
 """Uses motion planning interface to pick up an object."""
 
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Pose, Point
 
 from motion_planning.motionplanninginterface import MotionPlanningInterface
 
@@ -32,6 +32,9 @@ class Pick(Node):
         self.create_service(
             Empty, '/pick', self.pick_object, callback_group=self.callback
         )
+        self.create_service(
+            Empty, '/test', self.pick_object_test, callback_group=self.callback
+        )
 
         self.create_service(
             Empty,
@@ -59,6 +62,14 @@ class Pick(Node):
             self.grab,
             callback_group=self.callback,
         )
+
+        self.create_service(
+            Empty,
+            '/scan',
+            self.scan,
+            callback_group=self.callback,
+        )
+
 
         self.declare_parameter('scene', '')
         self.scene_file = (
@@ -167,8 +178,79 @@ class Pick(Node):
             rclpy.spin_once(self, timeout_sec=0.1)
         return response
 
+    async def scan(self, request, response):
+        from geometry_msgs.msg import Point
+        
+        center = Point(x=0.45, y=0.0, z=0.08)
+        
+        await self.interface.Planner.planCircularScanPath(
+            center=center,
+            radius=0.07,
+            height=0.25,
+            num_waypoints=36,
+            start_angle=0,
+            end_angle=160,
+            execImmediately=True,
+            save=False,
+        )
+        
+        await self.interface.Planner.planCircularScanPath(
+            center=center,
+            radius=0.07,
+            height=0.25,
+            num_waypoints=36,
+            start_angle=160,
+            end_angle=0,
+            execImmediately=True,
+            save=False,
+        )
 
+        await self.interface.Planner.planCircularScanPath(
+            center=center,
+            radius=0.12,
+            height=0.1,
+            num_waypoints=36,
+            start_angle=0,
+            end_angle=120,
+            execImmediately=True,
+            save=False,
+        )
 
+        await self.interface.Planner.planCircularScanPath(
+            center=center,
+            radius=0.12,
+            height=0.1,
+            num_waypoints=36,
+            start_angle=0,
+            end_angle=-120,
+            execImmediately=True,
+            save=False,
+        )
+        return response
+
+    async def pick_object_test(self, request, response):
+        """
+        Run sequence to do the following.
+
+        1. Move to object location and pose
+        2. Open grippers and attach object
+        3. Move to a different location
+        4. Open grippers and detach object
+        """
+        # Load scene from yaml file
+        # self.interface.scene.LoadScene(scene=self.scene_file)
+        # Move robot to above object location
+        # self.interface.Planner.planPathToPose(pose1)
+
+        # Move above object
+        loc1 = Point()
+        loc1.x = 0.6
+        loc1.y = -0.36
+        loc1.z = 0.05
+        await self.interface.Planner.planPathToPose(
+            loc=loc1, execImmediately=True
+        )
+        return response
     async def pick_object(self, request, response):
         """
         Run sequence to do the following.
@@ -179,7 +261,7 @@ class Pick(Node):
         4. Open grippers and detach object
         """
         # Load scene from yaml file
-        self.interface.scene.LoadScene(scene=self.scene_file)
+        # self.interface.scene.LoadScene(scene=self.scene_file)
         # Move robot to above object location
         # self.interface.Planner.planPathToPose(pose1)
 
