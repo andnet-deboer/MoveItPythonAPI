@@ -206,7 +206,7 @@ class MotionPlanner:
             request, execImmediately, save
         )
 
-    async def operate_gripper_2(self, position: float, max_effort: float):
+    async def operate_gripper_direct(self, position: float, max_effort: float):
         goal = Grasp.Goal()
 
         position = float(position)
@@ -215,8 +215,9 @@ class MotionPlanner:
         MostClosed = 0.01
         MostOpen = 0.035
 
-        amount = position * (MostOpen - MostClosed) + MostClosed
-        goal.width = amount
+        position = min(MostOpen, max(position, MostClosed))
+        
+        goal.width = position
         goal.force = max_effort  # in Newtons
         goal.speed = 0.04
         goal.epsilon.inner = 0.01
@@ -225,27 +226,6 @@ class MotionPlanner:
         self.node.get_logger().info(f'Goal: {goal}')
 
         future = self.gripper_client.send_goal_async(
-            goal, feedback_callback=self.gripperFeedbackLogger
-        )
-        future.add_done_callback(self.goal_response_callback)
-
-    async def operate_gripper_3(self, position: float, max_effort: float):
-        goal = GripperCommand.Goal()
-        position = float(position)
-        max_effort = float(max_effort)
-
-        MostClosed = 0.01
-        MostOpen = 0.035
-
-        amount = position * (MostOpen - MostClosed) + MostClosed
-
-        # Set the command message inside the goal
-        goal.command.position = amount
-        goal.command.max_effort = max_effort
-
-        self.node.get_logger().info(f'Goal: {goal}')
-
-        future = self.gripper_client2.send_goal_async(
             goal, feedback_callback=self.gripperFeedbackLogger
         )
         future.add_done_callback(self.goal_response_callback)
