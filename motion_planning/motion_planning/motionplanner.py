@@ -274,7 +274,7 @@ class MotionPlanner:
         self.node.get_logger().info(f'Grip Result: {result}')
 
     async def operate_gripper(self, width: float):
-        """Set gripper to a position based on open. 0=closed, 1=open."""
+        """Set gripper to a designated position."""
         request = self.createMotionPlanRequest()
         request.group_name = 'hand'
 
