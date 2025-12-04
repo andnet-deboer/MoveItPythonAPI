@@ -210,7 +210,7 @@ class MotionPlanner:
             request, execImmediately, save
         )
 
-    async def operate_gripper_direct(self, position: float, max_effort: float):
+    async def operate_gripper_2(self, position: float, speed: float = .04, epsilon: float = .001):
         goal = Grasp.Goal()
 
         position = float(position)
@@ -222,10 +222,9 @@ class MotionPlanner:
         position = min(MostOpen, max(position, MostClosed))
         
         goal.width = position
-        goal.force = max_effort  # in Newtons
         goal.speed = 0.04
-        goal.epsilon.inner = 0.01
-        goal.epsilon.outer = 0.01
+        goal.epsilon.inner = epsilon
+        goal.epsilon.outer = epsilon
 
         self.node.get_logger().info(f'Goal: {goal}')
 
@@ -274,7 +273,7 @@ class MotionPlanner:
         result = future.result().result
         self.node.get_logger().info(f'Grip Result: {result}')
 
-    async def operate_gripper(self, fraction: float):
+    async def operate_gripper(self, width: float):
         """Set gripper to a position based on open. 0=closed, 1=open."""
         request = self.createMotionPlanRequest()
         request.group_name = 'hand'
@@ -282,13 +281,13 @@ class MotionPlanner:
         MostClosed = 0.01
         MostOpen = 0.03
 
-        ammount = fraction * (MostOpen - MostClosed) + MostClosed
+        position = min(MostOpen, max(width/2, MostClosed))
 
         goalconst = Constraints()
         goalconst.joint_constraints.append(
             JointConstraint(
                 joint_name='fer_finger_joint1',
-                position=ammount,
+                position=position,
                 tolerance_above=0.0001,
                 tolerance_below=0.0001,
                 weight=1.0,
@@ -297,7 +296,7 @@ class MotionPlanner:
         goalconst.joint_constraints.append(
             JointConstraint(
                 joint_name='fer_finger_joint2',
-                position=ammount,
+                position=position,
                 tolerance_above=0.0001,
                 tolerance_below=0.0001,
                 weight=1.0,
