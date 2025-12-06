@@ -28,8 +28,7 @@ from moveit_msgs.srv import (
 from rclpy.action import ActionClient
 from rclpy.action import ActionClient
 from control_msgs.action import GripperCommand
-from franka_msgs.action import Grasp
-from franka_msgs.action import Move
+from franka_msgs.action import Grasp, Move
 
 
 from rclpy.callback_groups import MutuallyExclusiveCallbackGroup
@@ -210,80 +209,21 @@ class MotionPlanner:
             request, execImmediately, save
         )
 
-    async def operate_gripper_2(self, position: float, speed: float = .04, epsilon: float = .001):
-        goal = Grasp.Goal()
-
-        position = float(position)
-        max_effort = float(max_effort)
-
+    def calc_gripperwidth(self, width):
         MostClosed = 0.01
-        MostOpen = 0.035
+        MostOpen = 0.03
 
-        position = min(MostOpen, max(position, MostClosed))
-        
-        goal.width = position
-        goal.speed = 0.04
-        goal.epsilon.inner = epsilon
-        goal.epsilon.outer = epsilon
+        return min(MostOpen, max(width/2, MostClosed))
 
-        self.node.get_logger().info(f'Goal: {goal}')
+    async def operate_gripper(self, width):
+        await self.operate_gripper_move(width)
 
-        future = self.gripper_client.send_goal_async(
-            goal, feedback_callback=self.gripperFeedbackLogger
-        )
-        future.add_done_callback(self.goal_response_callback)
-
-
-    async def operate_gripper_3(self, width: float, speed: float):
-        goal = Move.Goal()
-        width = float(width)
-        speed = float(speed)
-
-        MostClosed = 0.01
-        MostOpen = 0.035
-
-        amount = width * (MostOpen - MostClosed) + MostClosed
-
-        # Set the command message inside the goal
-        goal.width = amount
-        goal.speed = speed
-
-        self.node.get_logger().info(f'Goal: {goal}')
-
-        future = self.gripper_move_client.send_goal_async(
-            goal, feedback_callback=self.gripperFeedbackLogger
-        )
-        future.add_done_callback(self.goal_response_callback)
-
-    def goal_response_callback(self, future):
-        goal_handle = future.result()
-        if not goal_handle.accepted:
-            self.node.get_logger().info('Goal rejected :(')
-            return
-
-        self.node.get_logger().info('Goal accepted :)')
-
-        self._get_result_future = goal_handle.get_result_async()
-        self._get_result_future.add_done_callback(self.get_result_callback)
-
-    def gripperFeedbackLogger(self, feedback_msg):
-        self.node.get_logger().info(f'Grip Feedback: {feedback_msg.feedback}')
-
-    def get_result_callback(self, future):
-        result = future.result().result
-        self.node.get_logger().info(f'Grip Result: {result}')
-
-    async def operate_gripper(self, width: float):
+    async def operate_gripper_moveit(self, width: float):
         """Set gripper to a designated position."""
         request = self.createMotionPlanRequest()
         request.group_name = 'hand'
 
-        MostClosed = 0.01
-        MostOpen = 0.03
-
-        self.node.get_logger().info(f'width: {width}')
-        position = min(MostOpen, max(width/2, MostClosed))
-        self.node.get_logger().info(f'position: {position}')
+        position = self.calc_gripperwidth(width)
 
         goalconst = Constraints()
         goalconst.joint_constraints.append(
@@ -313,6 +253,63 @@ class MotionPlanner:
         )
         self.node.get_logger().info('Executor completed')
         return result
+
+    async def operate_gripper_grasp(self, position: float, speed: float = .04, epsilon: float = .001):
+        goal = Grasp.Goal()
+
+        position = float(position)
+        max_effort = float(max_effort)
+
+        position = self.calc_gripperwidth(position)
+        
+        goal.width = position
+        goal.speed = 0.04
+        goal.epsilon.inner = epsilon
+        goal.epsilon.outer = epsilon
+
+        self.node.get_logger().info(f'Goal: {goal}')
+
+        future = self.gripper_client.send_goal_async(
+            goal, feedback_callback=self.gripperFeedbackLogger
+        )
+        future.add_done_callback(self.goal_response_callback)
+
+
+    async def operate_gripper_move(self, width: float, speed: float):
+        goal = Move.Goal()
+        width = float(width)
+        speed = float(speed)
+
+        amount = self.calc_gripperwidth(width)
+
+        # Set the command message inside the goal
+        goal.width = amount
+        goal.speed = speed
+
+        self.node.get_logger().info(f'Goal: {goal}')
+
+        future = self.gripper_move_client.send_goal_async(
+            goal, feedback_callback=self.gripperFeedbackLogger
+        )
+        future.add_done_callback(self.goal_response_callback)
+
+    def goal_response_callback(self, future):
+        goal_handle = future.result()
+        if not goal_handle.accepted:
+            self.node.get_logger().info('Goal rejected :(')
+            return
+
+        self.node.get_logger().info('Goal accepted :)')
+
+        self._get_result_future = goal_handle.get_result_async()
+        self._get_result_future.add_done_callback(self.get_result_callback)
+
+    def gripperFeedbackLogger(self, feedback_msg):
+        self.node.get_logger().info(f'Grip Feedback: {feedback_msg.feedback}')
+
+    def get_result_callback(self, future):
+        result = future.result().result
+        self.node.get_logger().info(f'Grip Result: {result}')
 
     async def open_gripper(self):
         """Open the gripper."""
