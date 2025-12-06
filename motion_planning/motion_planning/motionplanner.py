@@ -281,7 +281,9 @@ class MotionPlanner:
         MostClosed = 0.01
         MostOpen = 0.03
 
+        self.node.get_logger().info(f'width: {width}')
         position = min(MostOpen, max(width/2, MostClosed))
+        self.node.get_logger().info(f'position: {position}')
 
         goalconst = Constraints()
         goalconst.joint_constraints.append(
