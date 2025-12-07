@@ -24,7 +24,7 @@ from moveit_msgs.srv import (
     GetMotionPlan,
     GetMotionSequence,
 )
-
+import rclpy
 from rclpy.action import ActionClient
 from rclpy.action import ActionClient
 from control_msgs.action import GripperCommand
@@ -275,12 +275,15 @@ class MotionPlanner:
         future.add_done_callback(self.goal_response_callback)
 
 
-    async def operate_gripper_move(self, width: float, speed: float):
+    async def operate_gripper_move(self, width: float, speed: float = .04):
         goal = Move.Goal()
         width = float(width)
         speed = float(speed)
 
-        amount = self.calc_gripperwidth(width)
+        MostClosed = 0.00
+        MostOpen = 0.07
+
+        amount = min(MostOpen, max(width, MostClosed))
 
         # Set the command message inside the goal
         goal.width = amount
@@ -288,10 +291,9 @@ class MotionPlanner:
 
         self.node.get_logger().info(f'Goal: {goal}')
 
-        future = self.gripper_move_client.send_goal_async(
-            goal, feedback_callback=self.gripperFeedbackLogger
-        )
-        future.add_done_callback(self.goal_response_callback)
+        handle = await self.gripper_move_client.send_goal_async(goal)
+        await handle.get_result_async()
+        
 
     def goal_response_callback(self, future):
         goal_handle = future.result()
