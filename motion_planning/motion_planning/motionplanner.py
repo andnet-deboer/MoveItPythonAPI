@@ -275,7 +275,7 @@ class MotionPlanner:
         future.add_done_callback(self.goal_response_callback)
 
 
-    async def operate_gripper_move(self, width: float, speed: float):
+    async def operate_gripper_move(self, width: float, speed: float = .04):
         goal = Move.Goal()
         width = float(width)
         speed = float(speed)
