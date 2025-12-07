@@ -119,6 +119,9 @@ class MotionPlanner:
 
         self.down = Quaternion(x=1.0, y=0.0, z=0.0, w=0.0)
 
+        # Define named configurations Ready and Extended
+        self.create_named_configs() # Creates a dict called self.named_configs
+
     def createMotionPlanRequest(self):
         """Create Motion Plan Request."""
         request = MotionPlanRequest()
@@ -176,6 +179,17 @@ class MotionPlanner:
             return future
         else:
             return None
+
+    def create_named_configs(self):
+        """Create array of named configs."""
+        self.readyConfig = [
+            0.0,
+            -0.7853982,
+            0.0,
+            -2.3561945,
+            0.0,
+            1.570796,
+            0.7853982]
 
     async def planPathToConfig(
         self,
@@ -576,7 +590,7 @@ class MotionPlanner:
         avoidcollision=True,
         execImmediately=False,
         save=False,
-        orientation= False
+        orientation=True
     ):
         """
         Plan a Cartesian path from any valid starting pose to a goal pose.
