@@ -193,13 +193,13 @@ class MotionPlanner:
             'fer_joint7'
         ]
         self.readyConfig.position = [
-            float(0.0),
-            float(-0.7853982),
-            float(0.0),
-            float(-2.3561945),
-            float(0.0),
-            float(1.570796),
-            float(0.7853982)
+            0.0,
+            -0.7853982,
+            0.0,
+            -2.3561945,
+            0.0,
+            1.570796,
+            0.7853982
         ]
 
     async def planPathToConfig(
@@ -224,7 +224,7 @@ class MotionPlanner:
                     position=end.position[i],
                     tolerance_above=0.01,
                     tolerance_below=0.01,
-                    weight=1,
+                    weight=1.0,
                 )
             )
 
