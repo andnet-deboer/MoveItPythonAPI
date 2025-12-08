@@ -182,14 +182,25 @@ class MotionPlanner:
 
     def create_named_configs(self):
         """Create array of named configs."""
-        self.readyConfig = [
-            0.0,
-            -0.7853982,
-            0.0,
-            -2.3561945,
-            0.0,
-            1.570796,
-            0.7853982]
+        self.readyConfig = JointState()
+        self.readyConfig.name = [
+            'fer_joint1',
+            'fer_joint2',
+            'fer_joint3',
+            'fer_joint4',
+            'fer_joint5',
+            'fer_joint6',
+            'fer_joint7'
+        ]
+        self.readyConfig.position = [
+            float(0.0),
+            float(-0.7853982),
+            float(0.0),
+            float(-2.3561945),
+            float(0.0),
+            float(1.570796),
+            float(0.7853982)
+        ]
 
     async def planPathToConfig(
         self,
