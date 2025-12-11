@@ -517,7 +517,8 @@ class MotionPlanner:
         avoidcollision=True,
         execImmediately=False,
         save=False,
-        orientation=True
+        orientation=True,
+        vel_factor = None
     ):
         """
         Plan a Cartesian path from any valid starting pose to a goal pose.
@@ -529,6 +530,9 @@ class MotionPlanner:
             self.node.get_logger().info(
                 'Cartesian service not available, waiting...'
             )
+
+        if vel_factor is None:
+            vel_factor = self.vel_factor
 
         transformed_waypoints = []
 
@@ -552,7 +556,7 @@ class MotionPlanner:
         request.max_step = max_step
         request.avoid_collisions = avoidcollision
         request.max_acceleration_scaling_factor = self.accel_factor
-        request.max_velocity_scaling_factor = self.vel_factor
+        request.max_velocity_scaling_factor = vel_factor
         request.max_cartesian_speed = self.max_cart_speed
         future = await self.cartesian_client.call_async(request)
 
