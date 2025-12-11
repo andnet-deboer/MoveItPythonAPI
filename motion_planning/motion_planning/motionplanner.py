@@ -24,11 +24,9 @@ from moveit_msgs.srv import (
     GetMotionPlan,
     GetMotionSequence,
 )
-
+import rclpy
 from rclpy.action import ActionClient
 from rclpy.action import ActionClient
-from control_msgs.action import GripperCommand
-from franka_msgs.action import Grasp
 from franka_msgs.action import Move
 
 
@@ -103,11 +101,7 @@ class MotionPlanner:
             callback_group=self.cb,
         )
 
-        self.gripper_client = ActionClient(node, Grasp, '/fer_gripper/grasp')
         self.gripper_move_client = ActionClient(node, Move, '/fer_gripper/move')
-        self.gripper_client2 = ActionClient(
-            node, GripperCommand, '/fer_gripper/gripper_action'
-        )
 
         self.accel_factor = accel_factor
         self.vel_factor = vel_factor
@@ -119,6 +113,9 @@ class MotionPlanner:
         self.min_corner = Vector3(x=-1.0, y=-1.0, z=0.0)
 
         self.down = Quaternion(x=1.0, y=0.0, z=0.0, w=0.0)
+
+        # Define named configurations Ready and Extended
+        self.create_named_configs() # Creates a dict called self.named_configs
 
     def createMotionPlanRequest(self, vel_factor = None):
         """Create Motion Plan Request."""
@@ -132,7 +129,7 @@ class MotionPlanner:
         request.workspace_parameters.max_corner = self.max_corner
         request.workspace_parameters.min_corner = self.min_corner
         request.max_acceleration_scaling_factor = self.accel_factor
-        request.max_velocity_scaling_factor = vel_factor
+        request.max_velocity_scaling_factor = self.vel_factor
 
         request.workspace_parameters.header.stamp = self.getStamp()
         request.workspace_parameters.header.frame_id = 'base'
@@ -182,15 +179,38 @@ class MotionPlanner:
         else:
             return None
 
+    def create_named_configs(self):
+        """Create array of named configs."""
+        self.readyConfig = JointState()
+        self.readyConfig.name = [
+            'fer_joint1',
+            'fer_joint2',
+            'fer_joint3',
+            'fer_joint4',
+            'fer_joint5',
+            'fer_joint6',
+            'fer_joint7'
+        ]
+        self.readyConfig.position = [
+            0.0,
+            -0.7853982,
+            0.0,
+            -2.3561945,
+            0.0,
+            1.570796,
+            0.7853982
+        ]
+
     async def planPathToConfig(
         self,
         end: JointState,
         start: JointState = None,
         execImmediately: bool = False,
         save: bool = False,
+        vel_factor = None
     ):
         """Create path to given robot configuration."""
-        request = self.createMotionPlanRequest()
+        request = self.createMotionPlanRequest(vel_factor=vel_factor)
 
         if start is not None:
             request.start_state.joint_state = start
@@ -204,7 +224,7 @@ class MotionPlanner:
                     position=end.position[i],
                     tolerance_above=0.01,
                     tolerance_below=0.01,
-                    weight=1,
+                    weight=1.0,
                 )
             )
 
@@ -214,39 +234,15 @@ class MotionPlanner:
             request, execImmediately, save
         )
 
-    async def operate_gripper_2(self, position: float, max_effort: float):
-        goal = Grasp.Goal()
-
-        position = float(position)
-        max_effort = float(max_effort)
-
-        MostClosed = 0.01
-        MostOpen = 0.035
-
-        amount = position * (MostOpen - MostClosed) + MostClosed
-        goal.width = amount
-        goal.force = max_effort  # in Newtons
-        goal.speed = 0.04
-        goal.epsilon.inner = 0.01
-        goal.epsilon.outer = 0.01
-
-        self.node.get_logger().info(f'Goal: {goal}')
-
-        future = self.gripper_client.send_goal_async(
-            goal, feedback_callback=self.gripperFeedbackLogger
-        )
-        future.add_done_callback(self.goal_response_callback)
-
-
-    async def operate_gripper_3(self, width: float, speed: float):
+    async def operate_gripper(self, width: float, speed: float = .04):
         goal = Move.Goal()
         width = float(width)
         speed = float(speed)
 
-        MostClosed = 0.01
-        MostOpen = 0.035
+        MostClosed = 0.00
+        MostOpen = 0.07
 
-        amount = width * (MostOpen - MostClosed) + MostClosed
+        amount = min(MostOpen, max(width, MostClosed))
 
         # Set the command message inside the goal
         goal.width = amount
@@ -254,10 +250,9 @@ class MotionPlanner:
 
         self.node.get_logger().info(f'Goal: {goal}')
 
-        future = self.gripper_move_client.send_goal_async(
-            goal, feedback_callback=self.gripperFeedbackLogger
-        )
-        future.add_done_callback(self.goal_response_callback)
+        handle = await self.gripper_move_client.send_goal_async(goal)
+        await handle.get_result_async()
+        
 
     def goal_response_callback(self, future):
         goal_handle = future.result()
@@ -276,45 +271,6 @@ class MotionPlanner:
     def get_result_callback(self, future):
         result = future.result().result
         self.node.get_logger().info(f'Grip Result: {result}')
-
-    async def operate_gripper(self, fraction: float):
-        """Set gripper to a position based on open. 0=closed, 1=open."""
-        request = self.createMotionPlanRequest()
-        request.group_name = 'hand'
-
-        MostClosed = 0.01
-        MostOpen = 0.03
-
-        ammount = fraction * (MostOpen - MostClosed) + MostClosed
-
-        goalconst = Constraints()
-        goalconst.joint_constraints.append(
-            JointConstraint(
-                joint_name='fer_finger_joint1',
-                position=ammount,
-                tolerance_above=0.0001,
-                tolerance_below=0.0001,
-                weight=1.0,
-            )
-        )
-        goalconst.joint_constraints.append(
-            JointConstraint(
-                joint_name='fer_finger_joint2',
-                position=ammount,
-                tolerance_above=0.0001,
-                tolerance_below=0.0001,
-                weight=1.0,
-            )
-        )
-
-        request.goal_constraints = [goalconst]
-        self.node.get_logger().info('Sending to plan executor')
-
-        result = await self.dealWithGeneratingPlan(
-            request, execImmediately=True, save=False
-        )
-        self.node.get_logger().info('Executor completed')
-        return result
 
     async def open_gripper(self):
         """Open the gripper."""
@@ -345,7 +301,7 @@ class MotionPlanner:
         if loc is None and orient is None:
             return None  # Return nothing if no pose is provided
 
-        request = self.createMotionPlanRequest(vel_factor)
+        request = self.createMotionPlanRequest(vel_factor=vel_factor)
 
         if start is not None:
             request.start_state.joint_state = start
@@ -413,6 +369,7 @@ class MotionPlanner:
         start: JointState = None,
         execImmediately: bool = False,
         save: bool = False,
+        vel_factor = None
     ):
         """Wrap PlanPathToPose to take lists."""
         QOrient = Quaternion(
@@ -425,7 +382,7 @@ class MotionPlanner:
         PLoc = Point(x=float(loc[0]), y=float(loc[1]), z=float(loc[2]))
 
         return await self.planPathToPose(
-            PLoc, QOrient, start, execImmediately, save
+            PLoc, QOrient, start, execImmediately, save, vel_factor
         )
 
     async def planPathToPoseMsg(
@@ -434,17 +391,20 @@ class MotionPlanner:
         start: JointState = None,
         execImmediately: bool = False,
         save: bool = False,
-        vel_factor = None
+        vel_factor = None,
     ):
         """Wrap PlanPathToPose to take a Pose or PoseStamped."""
         poseUnstamped: Pose = Pose()
 
-        # Use isinstance
+        # Use isinstance, not identity comparison
         if isinstance(pose, PoseStamped):
             poseUnstamped = pose.pose
+            # OPTIONAL: if pose.header.frame_id != self.basename:
+            #    transform pose to self.basename here (use TF) before using it.
         elif isinstance(pose, Pose):
             poseUnstamped = pose
         else:
+            # nothing useful passed
             return None
 
         loc = poseUnstamped.position
@@ -557,8 +517,7 @@ class MotionPlanner:
         avoidcollision=True,
         execImmediately=False,
         save=False,
-        orientation= False,
-        vel_factor = None
+        orientation=True
     ):
         """
         Plan a Cartesian path from any valid starting pose to a goal pose.
@@ -570,9 +529,6 @@ class MotionPlanner:
             self.node.get_logger().info(
                 'Cartesian service not available, waiting...'
             )
-
-        if vel_factor is None:
-            vel_factor = self.vel_factor
 
         transformed_waypoints = []
 
@@ -679,6 +635,38 @@ class MotionPlanner:
             orientation=True
         )
     
+    # def _calculateCameraOrientation(self,
+    #     tcp_pos: Point,
+    #     target_pos: Point,
+    # ) -> Quaternion:
+    #     """Calculate orientation pointing camera toward center."""
+        
+        
+    #     # Direction vector
+    #     dx = target_pos.x - tcp_pos.x
+    #     dy = target_pos.y - tcp_pos.y
+    #     dz = target_pos.z - tcp_pos.z
+        
+    #     # Yaw: horizontal direction
+    #     yaw = np.arctan2(dy, dx)
+        
+    #     # Pitch: vertical tilt (negative for looking down)
+    #     horizontal_distance = np.sqrt(dx**2 + dy**2)
+    #     pitch = np.arctan2(-dz, horizontal_distance)
+        
+    #     # Roll: camera rotation (0 or π based on mounting)
+    #     roll = -np.pi  # or np.pi
+
+    #     quat= t3d.euler.euler2quat(roll, pitch, yaw, 'rxyz')
+
+    #     quat= np.array([quat[1], quat[2], quat[3], quat[0]])
+        
+    #     return Quaternion(
+    #         w=float(quat[0]),
+    #         x=float(quat[1]),
+    #         y=float(quat[2]),
+    #         z=float(quat[3])
+    #     )
 
     def _calculateCameraOrientation(
         self,
@@ -722,8 +710,10 @@ class MotionPlanner:
         dy /= distance
         dz /= distance
         
+        # Method 1: Using rotation matrix (more reliable)
         # Create a rotation matrix where Z-axis points toward the target
-        # Z-axis: pointing from camera to target 
+        
+        # Z-axis: pointing from camera to target (optical axis)
         z_axis = np.array([dx, dy, dz])
         
         # Choose an up vector (usually world Z-up)
@@ -763,6 +753,42 @@ class MotionPlanner:
             w=float(quat[0])
         )
 
+    # def _calculateCameraOrientation(
+    #     self,
+    #     tcp_pos: Point,
+    #     target_center: Point,
+    # ) -> Quaternion:
+    #     """
+    #     Calculate orientation pointing camera toward center.
+        
+    #     This function calculates the quaternion orientation needed to point
+    #     the camera at the target center from the current TCP position.
+    #     """
+        
+    #     # Calculate direction vector from TCP to target
+    #     dx = target_center.x - tcp_pos.x
+    #     dy = target_center.y - tcp_pos.y
+    #     dz = target_center.z - tcp_pos.z
+        
+    #     yaw = np.arctan2(dy, dx)
+        
+    #     horizontal_distance = np.sqrt(dx**2 + dy**2)
+    #     pitch = np.arctan2(-dz, horizontal_distance)  
+        
+    #     roll = np.pi 
+        
+    #     # Convert Euler angles to quaternion
+    #     # transforms3d uses 'rxyz' convention (roll-pitch-yaw)
+    #     quat = t3d.euler.euler2quat(roll, pitch, yaw, 'rxyz')
+        
+    #     # t3d.euler.euler2quat returns [w, x, y, z]
+    #     # ROS Quaternion expects x, y, z, w
+    #     return Quaternion(
+    #         x=float(quat[1]),
+    #         y=float(quat[2]),
+    #         z=float(quat[3]),
+    #         w=float(quat[0])
+    #     )
 
     async def executePath(self, path: RobotTrajectory):
         """Execute provided path."""
