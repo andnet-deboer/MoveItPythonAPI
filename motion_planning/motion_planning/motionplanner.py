@@ -120,15 +120,19 @@ class MotionPlanner:
 
         self.down = Quaternion(x=1.0, y=0.0, z=0.0, w=0.0)
 
-    def createMotionPlanRequest(self):
+    def createMotionPlanRequest(self, vel_factor = None):
         """Create Motion Plan Request."""
+
+        if vel_factor is None:
+            vel_factor = self.vel_factor
+
         request = MotionPlanRequest()
         request.group_name = self.groupname
         request.workspace_parameters.header.stamp = self.getStamp()
         request.workspace_parameters.max_corner = self.max_corner
         request.workspace_parameters.min_corner = self.min_corner
         request.max_acceleration_scaling_factor = self.accel_factor
-        request.max_velocity_scaling_factor = self.vel_factor
+        request.max_velocity_scaling_factor = vel_factor
 
         request.workspace_parameters.header.stamp = self.getStamp()
         request.workspace_parameters.header.frame_id = 'base'
@@ -327,6 +331,7 @@ class MotionPlanner:
         start: JointState = None,
         execImmediately: bool = False,
         save: bool = False,
+        vel_factor = None
     ):
         """
         Create a path to a given pose and orientation.
@@ -340,7 +345,7 @@ class MotionPlanner:
         if loc is None and orient is None:
             return None  # Return nothing if no pose is provided
 
-        request = self.createMotionPlanRequest()
+        request = self.createMotionPlanRequest(vel_factor)
 
         if start is not None:
             request.start_state.joint_state = start
@@ -423,33 +428,13 @@ class MotionPlanner:
             PLoc, QOrient, start, execImmediately, save
         )
 
-    # async def planPathToPoseMsg(
-    #     self,
-    #     pose,
-    #     start: JointState = None,
-    #     execImmediately: bool = False,
-    #     save: bool = False,
-    # ):
-    #     """Wrap PlanPathToPose to take a Pose."""
-    #     poseUnstamped: Pose = Pose()
-    #     if pose is PoseStamped:
-    #         poseUnstamped = pose.pose
-    #     elif pose is Pose:
-    #         poseUnstamped = pose
-
-    #     loc = poseUnstamped.position
-    #     orient = poseUnstamped.orientation
-
-    #     return await self.planPathToPose(
-    #         loc, orient, start, execImmediately, save
-    #     )
-
     async def planPathToPoseMsg(
         self,
         pose,
         start: JointState = None,
         execImmediately: bool = False,
         save: bool = False,
+        vel_factor = None
     ):
         """Wrap PlanPathToPose to take a Pose or PoseStamped."""
         poseUnstamped: Pose = Pose()
@@ -466,7 +451,7 @@ class MotionPlanner:
         orient = poseUnstamped.orientation
 
         return await self.planPathToPose(
-            loc, orient, start, execImmediately, save
+            loc, orient, start, execImmediately, save, vel_factor
         )
 
     async def dealWithGeneratingPlan(
@@ -572,7 +557,8 @@ class MotionPlanner:
         avoidcollision=True,
         execImmediately=False,
         save=False,
-        orientation= False
+        orientation= False,
+        vel_factor = None
     ):
         """
         Plan a Cartesian path from any valid starting pose to a goal pose.
@@ -584,6 +570,9 @@ class MotionPlanner:
             self.node.get_logger().info(
                 'Cartesian service not available, waiting...'
             )
+
+        if vel_factor is None:
+            vel_factor = self.vel_factor
 
         transformed_waypoints = []
 
