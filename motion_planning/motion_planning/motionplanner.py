@@ -1,7 +1,10 @@
 """Deals with functions for planning robot trajectory."""
 
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Pose, PoseStamped, Point
 from geometry_msgs.msg import Quaternion, Vector3
+import math
+import numpy as np
+import transforms3d as t3d
 
 from motion_planning.utilities import Utilities
 
@@ -23,6 +26,12 @@ from moveit_msgs.srv import (
 )
 
 from rclpy.action import ActionClient
+from rclpy.action import ActionClient
+from control_msgs.action import GripperCommand
+from franka_msgs.action import Grasp
+from franka_msgs.action import Move
+
+
 from rclpy.callback_groups import MutuallyExclusiveCallbackGroup
 from rclpy.node import Node
 
@@ -94,6 +103,12 @@ class MotionPlanner:
             callback_group=self.cb,
         )
 
+        self.gripper_client = ActionClient(node, Grasp, '/fer_gripper/grasp')
+        self.gripper_move_client = ActionClient(node, Move, '/fer_gripper/move')
+        self.gripper_client2 = ActionClient(
+            node, GripperCommand, '/fer_gripper/gripper_action'
+        )
+
         self.accel_factor = accel_factor
         self.vel_factor = vel_factor
         self.max_cart_speed = max_cart_speed
@@ -102,6 +117,8 @@ class MotionPlanner:
 
         self.max_corner = Vector3(x=1.0, y=1.0, z=1.0)
         self.min_corner = Vector3(x=-1.0, y=-1.0, z=0.0)
+
+        self.down = Quaternion(x=1.0, y=0.0, z=0.0, w=0.0)
 
     def createMotionPlanRequest(self):
         """Create Motion Plan Request."""
@@ -193,6 +210,69 @@ class MotionPlanner:
             request, execImmediately, save
         )
 
+    async def operate_gripper_2(self, position: float, max_effort: float):
+        goal = Grasp.Goal()
+
+        position = float(position)
+        max_effort = float(max_effort)
+
+        MostClosed = 0.01
+        MostOpen = 0.035
+
+        amount = position * (MostOpen - MostClosed) + MostClosed
+        goal.width = amount
+        goal.force = max_effort  # in Newtons
+        goal.speed = 0.04
+        goal.epsilon.inner = 0.01
+        goal.epsilon.outer = 0.01
+
+        self.node.get_logger().info(f'Goal: {goal}')
+
+        future = self.gripper_client.send_goal_async(
+            goal, feedback_callback=self.gripperFeedbackLogger
+        )
+        future.add_done_callback(self.goal_response_callback)
+
+
+    async def operate_gripper_3(self, width: float, speed: float):
+        goal = Move.Goal()
+        width = float(width)
+        speed = float(speed)
+
+        MostClosed = 0.01
+        MostOpen = 0.035
+
+        amount = width * (MostOpen - MostClosed) + MostClosed
+
+        # Set the command message inside the goal
+        goal.width = amount
+        goal.speed = speed
+
+        self.node.get_logger().info(f'Goal: {goal}')
+
+        future = self.gripper_move_client.send_goal_async(
+            goal, feedback_callback=self.gripperFeedbackLogger
+        )
+        future.add_done_callback(self.goal_response_callback)
+
+    def goal_response_callback(self, future):
+        goal_handle = future.result()
+        if not goal_handle.accepted:
+            self.node.get_logger().info('Goal rejected :(')
+            return
+
+        self.node.get_logger().info('Goal accepted :)')
+
+        self._get_result_future = goal_handle.get_result_async()
+        self._get_result_future.add_done_callback(self.get_result_callback)
+
+    def gripperFeedbackLogger(self, feedback_msg):
+        self.node.get_logger().info(f'Grip Feedback: {feedback_msg.feedback}')
+
+    def get_result_callback(self, future):
+        result = future.result().result
+        self.node.get_logger().info(f'Grip Result: {result}')
+
     async def operate_gripper(self, fraction: float):
         """Set gripper to a position based on open. 0=closed, 1=open."""
         request = self.createMotionPlanRequest()
@@ -242,8 +322,8 @@ class MotionPlanner:
 
     async def planPathToPose(
         self,
-        loc=None,
-        orient=None,
+        loc: Point = None,
+        orient: Quaternion = None,
         start: JointState = None,
         execImmediately: bool = False,
         save: bool = False,
@@ -270,9 +350,7 @@ class MotionPlanner:
 
         if orient is not None:
             rotconst = OrientationConstraint()
-            rotconst.orientation = Quaternion(
-                x=orient[0], y=orient[1], z=orient[2], w=orient[3]
-            )
+            rotconst.orientation = orient
             rotconst.absolute_x_axis_tolerance = 0.01
             rotconst.absolute_y_axis_tolerance = 0.01
             rotconst.absolute_z_axis_tolerance = 0.01
@@ -296,13 +374,11 @@ class MotionPlanner:
                 0.01,
                 0.01,
                 0.01,
-            ]  # 1cm tolerance in each direction
+            ]  # 1mm tolerance in each direction
 
             # Define where this
             box_pose = Pose()
-            box_pose.position.x = float(loc[0])
-            box_pose.position.y = float(loc[1])
-            box_pose.position.z = float(loc[2])
+            box_pose.position = loc
             box_pose.orientation.w = 1.0
 
             locconst.constraint_region.primitives = [box]
@@ -312,8 +388,8 @@ class MotionPlanner:
                 f' Goal in tcp frame {locconst.target_point_offset}'
             )
 
-            goalconst.position_constraints = [locconst]
             locconst.target_point_offset = Vector3(x=0.0, y=0.0, z=0.0)
+            goalconst.position_constraints = [locconst]
 
         request.goal_constraints = [goalconst]
 
@@ -323,6 +399,74 @@ class MotionPlanner:
 
         return await self.dealWithGeneratingPlan(
             request, execImmediately, save
+        )
+
+    async def planPathToPoseLists(
+        self,
+        loc=None,
+        orient=None,
+        start: JointState = None,
+        execImmediately: bool = False,
+        save: bool = False,
+    ):
+        """Wrap PlanPathToPose to take lists."""
+        QOrient = Quaternion(
+            x=float(orient[0]),
+            y=float(orient[1]),
+            z=float(orient[2]),
+            w=float(orient[3]),
+        )
+
+        PLoc = Point(x=float(loc[0]), y=float(loc[1]), z=float(loc[2]))
+
+        return await self.planPathToPose(
+            PLoc, QOrient, start, execImmediately, save
+        )
+
+    # async def planPathToPoseMsg(
+    #     self,
+    #     pose,
+    #     start: JointState = None,
+    #     execImmediately: bool = False,
+    #     save: bool = False,
+    # ):
+    #     """Wrap PlanPathToPose to take a Pose."""
+    #     poseUnstamped: Pose = Pose()
+    #     if pose is PoseStamped:
+    #         poseUnstamped = pose.pose
+    #     elif pose is Pose:
+    #         poseUnstamped = pose
+
+    #     loc = poseUnstamped.position
+    #     orient = poseUnstamped.orientation
+
+    #     return await self.planPathToPose(
+    #         loc, orient, start, execImmediately, save
+    #     )
+
+    async def planPathToPoseMsg(
+        self,
+        pose,
+        start: JointState = None,
+        execImmediately: bool = False,
+        save: bool = False,
+    ):
+        """Wrap PlanPathToPose to take a Pose or PoseStamped."""
+        poseUnstamped: Pose = Pose()
+
+        # Use isinstance
+        if isinstance(pose, PoseStamped):
+            poseUnstamped = pose.pose
+        elif isinstance(pose, Pose):
+            poseUnstamped = pose
+        else:
+            return None
+
+        loc = poseUnstamped.position
+        orient = poseUnstamped.orientation
+
+        return await self.planPathToPose(
+            loc, orient, start, execImmediately, save
         )
 
     async def dealWithGeneratingPlan(
@@ -428,6 +572,7 @@ class MotionPlanner:
         avoidcollision=True,
         execImmediately=False,
         save=False,
+        orientation= False
     ):
         """
         Plan a Cartesian path from any valid starting pose to a goal pose.
@@ -443,10 +588,11 @@ class MotionPlanner:
         transformed_waypoints = []
 
         for pose in waypoints:
-            pose.orientation.x = 1.0
-            pose.orientation.y = 0.0
-            pose.orientation.z = 0.0
-            pose.orientation.w = 0.0
+            if not orientation:
+                pose.orientation.x = 1.0
+                pose.orientation.y = 0.0
+                pose.orientation.z = 0.0
+                pose.orientation.w = 0.0
             # pose_transformed = (
             #     self.interface.state.transform_BaseToGripperFrame(pose)
             # )
@@ -476,6 +622,158 @@ class MotionPlanner:
             return future.solution
         else:
             return None
+        
+    async def planCircularScanPath(
+        self,
+        center: Point,
+        radius: float,
+        height: float,
+        num_waypoints: int = 12,
+        start_angle: float = 0.0,
+        end_angle: float = 360.0,
+        execImmediately: bool = False,
+        save: bool = False,
+    ):
+        """
+        Plan a circular scanning path
+        
+        Args:
+        ----
+        center: Point at the center of the circular path (table center)
+        radius: Radius of the circular path
+        height: Height above the table to maintain
+        num_waypoints: Number of waypoints for the circular path
+        start_angle: Starting angle in degrees (0-360)
+        end_angle: Ending angle in degrees
+        execImmediately: Execute immediately if True
+        save: Save the trajectory if True
+        
+        Returns
+        -------
+        RobotTrajectory if successful, None otherwise
+        """
+        
+        waypoints = []
+        angles = np.linspace(
+            np.radians(start_angle), 
+            np.radians(end_angle), 
+            num_waypoints
+        )
+        
+        for angle in angles:
+            # Calculate TCP position in circular path
+            x = center.x + radius * np.cos(angle)
+            y = center.y + radius * np.sin(angle)
+            z = center.z + height
+            
+            tcp_pos = Point(x=x, y=y, z=z)
+            
+            # Calculate orientation to maintain camera angle
+            orientation = self._calculateCameraOrientation(
+                tcp_pos, 
+                center
+            )
+            
+            pose = Pose()
+            pose.position = tcp_pos
+            pose.orientation = orientation
+            waypoints.append(pose)
+            self.node.get_logger().info(f"WAYPOINTS: {pose}\n")
+        
+        # Use Cartesian planning for smooth path following
+        return await self.planCartesianPath(
+            waypoints,
+            max_step=0.01,
+            avoidcollision=True,
+            execImmediately=execImmediately,
+            save=save,
+            orientation=True
+        )
+    
+
+    def _calculateCameraOrientation(
+        self,
+        tcp_pos: Point,
+        target_center: Point,
+        camera_offset_from_tcp: dict = None
+    ) -> Quaternion:
+        """
+        Calculate orientation for camera to look at target center.
+        
+        Args:
+            tcp_pos: Current TCP position
+            target_center: Target point to look at
+            camera_offset_from_tcp: Optional dict with camera offset from TCP
+                                {'x': 0, 'y': 0, 'z': 0.1} for camera 10cm above TCP
+        
+        Returns:
+            Quaternion orientation for the end effector
+        """
+        
+        # If camera has offset from TCP, adjust the calculation point
+        if camera_offset_from_tcp:
+            camera_x = tcp_pos.x + camera_offset_from_tcp.get('x', 0)
+            camera_y = tcp_pos.y + camera_offset_from_tcp.get('y', 0)
+            camera_z = tcp_pos.z + camera_offset_from_tcp.get('z', 0)
+        else:
+            camera_x, camera_y, camera_z = tcp_pos.x, tcp_pos.y, tcp_pos.z
+        
+        # Calculate direction vector from camera to target
+        dx = target_center.x - camera_x
+        dy = target_center.y - camera_y
+        dz = target_center.z - camera_z
+        
+        # Normalize the direction vector
+        distance = np.sqrt(dx**2 + dy**2 + dz**2)
+        if distance < 1e-6:  # Avoid division by zero
+            # Return default downward orientation
+            return Quaternion(x=1.0, y=0.0, z=0.0, w=0.0)
+        
+        dx /= distance
+        dy /= distance
+        dz /= distance
+        
+        # Create a rotation matrix where Z-axis points toward the target
+        # Z-axis: pointing from camera to target 
+        z_axis = np.array([dx, dy, dz])
+        
+        # Choose an up vector (usually world Z-up)
+        world_up = np.array([0, 0, 1])
+        
+        # X-axis: perpendicular to both Z and world_up
+        x_axis = np.cross(world_up, z_axis)
+        x_norm = np.linalg.norm(x_axis)
+        
+        # Handle special case when looking straight up or down
+        if x_norm < 1e-6:
+            # Use world X or Y as reference
+            world_x = np.array([1, 0, 0])
+            x_axis = np.cross(world_x, z_axis)
+            x_norm = np.linalg.norm(x_axis)
+        
+        x_axis /= x_norm
+        
+        # Y-axis: complete the right-handed coordinate system
+        y_axis = np.cross(z_axis, x_axis)
+        
+        # Create rotation matrix
+        rotation_matrix = np.array([
+            [x_axis[0], y_axis[0], z_axis[0]],
+            [x_axis[1], y_axis[1], z_axis[1]],
+            [x_axis[2], y_axis[2], z_axis[2]]
+        ])
+        
+        # Convert to quaternion
+        quat = t3d.quaternions.mat2quat(rotation_matrix)
+        
+        # transforms3d returns [w, x, y, z], ROS expects x, y, z, w
+        return Quaternion(
+            x=float(quat[1]),
+            y=float(quat[2]),
+            z=float(quat[3]),
+            w=float(quat[0])
+        )
+
 
     async def executePath(self, path: RobotTrajectory):
         """Execute provided path."""
