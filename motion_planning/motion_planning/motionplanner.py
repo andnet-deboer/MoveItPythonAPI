@@ -1,10 +1,10 @@
 """Deals with functions for planning robot trajectory."""
 
-from geometry_msgs.msg import Pose, PoseStamped, Point
-from geometry_msgs.msg import Quaternion, Vector3
-import math
-import numpy as np
-import transforms3d as t3d
+from control_msgs.action import GripperCommand
+
+from franka_msgs.action import Grasp, Move
+
+from geometry_msgs.msg import Point, Pose, PoseStamped, Quaternion, Vector3
 
 from motion_planning.utilities import Utilities
 
@@ -24,19 +24,18 @@ from moveit_msgs.srv import (
     GetMotionPlan,
     GetMotionSequence,
 )
-import rclpy
-from rclpy.action import ActionClient
-from rclpy.action import ActionClient
-from control_msgs.action import GripperCommand
-from franka_msgs.action import Grasp, Move
 
+import numpy as np
 
+from rclpy.action import ActionClient
 from rclpy.callback_groups import MutuallyExclusiveCallbackGroup
 from rclpy.node import Node
 
 from sensor_msgs.msg import JointState
 
 from shape_msgs.msg import SolidPrimitive
+
+import transforms3d as t3d
 
 
 class MotionPlanner:
@@ -103,7 +102,11 @@ class MotionPlanner:
         )
 
         self.gripper_client = ActionClient(node, Grasp, '/fer_gripper/grasp')
-        self.gripper_move_client = ActionClient(node, Move, '/fer_gripper/move')
+
+        self.gripper_move_client = ActionClient(
+            node, Move,
+            '/fer_gripper/move'
+        )
         self.gripper_client2 = ActionClient(
             node, GripperCommand, '/fer_gripper/gripper_action'
         )
@@ -120,7 +123,7 @@ class MotionPlanner:
         self.down = Quaternion(x=1.0, y=0.0, z=0.0, w=0.0)
 
         # Define named configurations Ready and Extended
-        self.create_named_configs() # Creates a dict called self.named_configs
+        self.create_named_configs()  # Creates a dict called self.named_configs
 
     def createMotionPlanRequest(self):
         """Create Motion Plan Request."""
